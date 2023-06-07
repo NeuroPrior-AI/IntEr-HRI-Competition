@@ -1,5 +1,8 @@
 # IntEr-HRI-Competition
 
+# Attention
+- Need to revise the File_Path (Including training data and EEG_Final.csv) in EEG_Final.py when run the scripts
+
 # Task
 - Begin to implement the time series transformer model
 - Have a meeting with Bo Zhao to discuss how to use the dataset
