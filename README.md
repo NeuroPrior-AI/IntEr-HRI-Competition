@@ -5,7 +5,7 @@
 
 # Task
 - Begin to implement the time series transformer model
-- Have a meeting with Bo Zhao to discuss how to use the dataset
+- Have a meeting with Bo Zhao to discuss whether the dataset is good and how to use the dataset
 - Communicate with Xuzhe and Paul Tang to solve the problem together
 
 # 1. Data Processing
