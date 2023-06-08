@@ -35,8 +35,8 @@ output_base_path
 │   │   file1_trial_1.csv
 │   │   ...
 ```
-file1_combined.csv will contain the data for all trial
-file1_trial_1.csv will only contain the data for trial 1
+- file1_combined.csv will contain the data for all trial
+- file1_trial_1.csv will only contain the data for trial 1
 
 
 # 3. Transformer Model
