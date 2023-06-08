@@ -32,6 +32,7 @@ output_base_path
 │   │   file1_combined.csv
 │   │   file1_trial_1.csv
 │   │   ...
+```
 
 # 3. Transformer Model
 1. source:
