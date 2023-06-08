@@ -20,23 +20,22 @@
 ```plaintext
 output_base_path
 │
+└───EEG_Epoch.csv
+│
 └───AA56D
-│   │   file1_combined.csv
-│   │   file1_trial_1.csv
-│   │   file1_trial_2.csv
-│   │   ...
-│   │   file2_combined.csv
-│   │   file2_trial_1.csv
-│   │   file2_trial_2.csv
+│   │   set1_combined.csv
+│   │   set2_combined.csv
+│   │   set3_combined.csv
 │   │   ...
 │
 └───AC17D
-│   │   file1_combined.csv
-│   │   file1_trial_1.csv
+│   │   set1_combined.csv
+│   │   set2_combined.csv
+│   │   set3_combined.csv
 │   │   ...
 ```
-- file1_combined.csv will contain the data for all trial
-- file1_trial_1.csv will only contain the data for trial 1
+- EEG-Epoch.csv contain all of the set_combined.csv in all folder
+- set1_combined.csv will contain the data for set1.vhdr
 
 
 # 3. Transformer_Model
