@@ -1,7 +1,7 @@
 # IntEr-HRI-Competition
 
 # Attention
-- Need to revise the File_Path (Including training data and EEG_Final.csv) in EEG_Final.py when run the scripts
+- Need to revise the File_Path (Including training data and EEG_Final.csv) in EEG_Final.py and EEG_Epoch.py when run the scripts
 
 # Task
 - Begin to implement the time series transformer model
@@ -14,6 +14,7 @@
 - If there is a event, it will label the name of label. If there is no event, it will directly empty.
 
 # 2. Epoch
+- When you run EEG_epoch.py scripts, you will get the file struture as below
 
 ```plaintext
 output_base_path
