@@ -20,26 +20,25 @@
 ```plaintext
 output_base_path
 │
+└───EEG_Epoch.csv
+│
 └───AA56D
-│   │   file1_combined.csv
-│   │   file1_trial_1.csv
-│   │   file1_trial_2.csv
-│   │   ...
-│   │   file2_combined.csv
-│   │   file2_trial_1.csv
-│   │   file2_trial_2.csv
+│   │   set1_combined.csv
+│   │   set2_combined.csv
+│   │   set3_combined.csv
 │   │   ...
 │
 └───AC17D
-│   │   file1_combined.csv
-│   │   file1_trial_1.csv
+│   │   set1_combined.csv
+│   │   set2_combined.csv
+│   │   set3_combined.csv
 │   │   ...
 ```
-- file1_combined.csv will contain the data for all trial
-- file1_trial_1.csv will only contain the data for trial 1
+- EEG-Epoch.csv contain all of the set_combined.csv in all folder
+- set1_combined.csv will contain the data for set1.vhdr
 
 
-# 3. Transformer Model
+# 3. Transformer_Model
 1. source:
 - https://pytorch-forecasting.readthedocs.io/en/stable/tutorials/stallion.html
 - https://docs.google.com/presentation/d/1ZXFIhYczos679r70Yu8vV9uO6B1J0ztzeDxbnBxD1S0/mobilepresent?slide=id.g31364026ad_3_2
