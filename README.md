@@ -14,24 +14,23 @@
 - If there is a event, it will label the name of label. If there is no event, it will directly empty.
 
 # 2. Epoch
-`
 output_base_path
 │
 └───AA56D
-│   │   file1_combined.csv
-│   │   file1_trial_1.csv
-│   │   file1_trial_2.csv
-│   │   ...
-│   │   file2_combined.csv
-│   │   file2_trial_1.csv
-│   │   file2_trial_2.csv
-│   │   ...
+│ │ file1_combined.csv
+│ │ file1_trial_1.csv
+│ │ file1_trial_2.csv
+│ │ ...
+│ │ file2_combined.csv
+│ │ file2_trial_1.csv
+│ │ file2_trial_2.csv
+│ │ ...
 │
 └───AC17D
-│   │   file1_combined.csv
-│   │   file1_trial_1.csv
-│   │   ...
-`
+│ │ file1_combined.csv
+│ │ file1_trial_1.csv
+│ │ ...
+
 
 # 3. Transformer Model
 1. source:
