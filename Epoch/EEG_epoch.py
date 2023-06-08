@@ -13,7 +13,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 folders = ['AA56D', 'AC17D', 'AJ05D', 'AQ59D', 'AW59D', 'AY63D', 'BS34D', 'BY74D']
-base_path = '/Users/zhezhengren/Documents/GitHub/IntEr-HRI-Competition/training data/'
+base_path = '/Users/zhezhengren/Desktop/NeuroPrior_AI/Model_Competion/EEG/training data/'
 output_base_path = '/Users/zhezhengren/Documents/GitHub/IntEr-HRI-Competition/Epoch/'
 event_codes_labels = {
     1: "S 1",
@@ -37,45 +37,39 @@ for folder in folders:
             file_path = os.path.join(folder_path, filename)
             print('Analyzing file:', file_path)
             raw = mne.io.read_raw_brainvision(file_path, scale=1, preload=True)
-
+            
             raw.filter(l_freq=0.1, h_freq=50)
             raw.set_montage('standard_1020', on_missing='ignore')
 
             epochs = mne.Epochs(raw, mne.events_from_annotations(raw)[0], tmin=-0.1, tmax=0.9, preload=True)
 
-            n_trials, n_channels, n_time_points = epochs.get_data().shape
+            epochs.drop_bad()
 
-            # Event names
-            event_names_1d = []
+            # Pick only EEG channels
+            epochs.pick_types(eeg=True)
+
+            epochs_data = epochs.get_data()
+            n_trials, n_channels, n_time_points = epochs_data.shape
+
+            epochs_data_2d = epochs_data.reshape(n_trials * n_time_points, n_channels)
+            df = pd.DataFrame(epochs_data_2d, columns=epochs.ch_names)
+
+            trial_index = np.repeat(np.arange(n_trials)+1, n_time_points)
+
+            event_names_1d = [""]*n_trials*n_time_points
             for i in range(n_trials):
                 event_code = epochs.events[i, 2]
-                if event_code in event_codes_labels:
-                    event_names_1d.extend([event_codes_labels[event_code]] * n_time_points)
+                if event_code in event_codes_labels.keys():
+                    event_names_1d[i * n_time_points:(i + 1) * n_time_points] = [event_codes_labels[event_code]] * n_time_points
                 else:
                     print(f"Unrecognized event code at trial {i}: {event_code}")
-                    event_names_1d.extend(["unknown"] * n_time_points)
 
-            # Data
-            data = epochs.get_data().reshape(n_trials * n_time_points, n_channels)
-            df = pd.DataFrame(data, columns=epochs.ch_names)
-
-            # Trial Index
-            df.insert(0, 'Trial Index', np.repeat(np.arange(n_trials)+1, n_time_points))
-
-            # Time Point
+            df.insert(0, 'Trial Index', trial_index)
             df.insert(1, 'Time Point', np.tile(np.arange(n_time_points), n_trials) + 1)
-
-            # Event Name
             df.insert(len(df.columns), 'Event Name', event_names_1d)
 
-            # Save as a combined CSV for each file
             df.to_csv(os.path.join(output_folder_path, f'{filename}_combined.csv'))
 
-            # Save each trial index into an individual CSV file
-            for trial_index in df['Trial Index'].unique():
-                df_trial = df[df['Trial Index'] == trial_index]
-                df_trial.to_csv(os.path.join(output_folder_path, f'{filename}_trial_{trial_index}.csv'))
-
 # Concatenate all dataframes and save as final CSV
-final_df = pd.concat([pd.read_csv(os.path.join(output_base_path, folder, f'{filename}_combined.csv')) for folder in folders for filename in os.listdir(os.path.join(output_base_path, folder)) if filename.endswith('_combined.csv')])
+final_df = pd.concat([pd.read_csv(os.path.join(output_base_path, folder, filename)) for folder in folders for filename in os.listdir(os.path.join(output_base_path, folder)) if filename.endswith('_combined.csv')])
 final_df.to_csv(os.path.join(output_base_path, 'EEG_Epoch.csv'))
