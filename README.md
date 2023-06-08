@@ -39,7 +39,7 @@ output_base_path
 - file1_trial_1.csv will only contain the data for trial 1
 
 
-# 3. Transformer Model
+# 3. Transformer_Model
 1. source:
 - https://pytorch-forecasting.readthedocs.io/en/stable/tutorials/stallion.html
 - https://docs.google.com/presentation/d/1ZXFIhYczos679r70Yu8vV9uO6B1J0ztzeDxbnBxD1S0/mobilepresent?slide=id.g31364026ad_3_2
