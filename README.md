@@ -15,6 +15,7 @@
 
 # 2. Epoch
 - When you run EEG_epoch.py scripts, you will get the file struture as below
+- Epoch is from -0.1s to 0.9s
 
 ```plaintext
 output_base_path
@@ -34,6 +35,9 @@ output_base_path
 │   │   file1_trial_1.csv
 │   │   ...
 ```
+file1_combined.csv will contain the data for all trial
+file1_trial_1.csv will only contain the data for trial 1
+
 
 # 3. Transformer Model
 1. source:
