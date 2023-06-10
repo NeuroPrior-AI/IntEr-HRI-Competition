@@ -13,7 +13,33 @@
 - The sampling frequency is 500 Hz, the time point will increase 0.002 for each.
 - If there is a event, it will label the name of label. If there is no event, it will directly empty.
 
-# 2. Epoch
+# 2. Data_Epoch_Range
+- Data_Epoch_Range is based on the Data_Processing
+- Revised the time point to increase 1 for each (still 500 Hz)
+- Label the range of Epoch from -0.1 to 0.9 as same Event (Increase the number of Event label name
+
+```plaintext
+output_base_path
+│
+└───Data_Epoch.csv
+│
+└───AA56D
+│   │   set1_processed.csv
+│   │   set2_processed.csv
+│   │   ...
+│   │   AA56D_combined.csv
+│
+└───AC17D
+│   │   set1_processed.csv
+│   │   set2_processed.csv
+│   │   ...
+│   │   AC17D_combined.csv
+│
+```
+- Data_Epoch.csv contain all of the set_combined.csv in all folder
+- AA56D_combined.csv will contain the all set_processed.csv data for vhdr file
+
+# 3. Epoch
 - When you run EEG_epoch.py scripts, you will get the file struture as below
 - Epoch is from -0.1s to 0.9s
 
@@ -34,11 +60,11 @@ output_base_path
 │   │   set3_combined.csv
 │   │   ...
 ```
-- EEG-Epoch.csv contain all of the set_combined.csv in all folder
+- EEG_Epoch.csv contain all of the set_combined.csv in all folder
 - set1_combined.csv will contain the data for set1.vhdr
 
 
-# 3. Transformer_Model
+# 4. Transformer_Model
 1. source:
 - https://pytorch-forecasting.readthedocs.io/en/stable/tutorials/stallion.html
 - https://docs.google.com/presentation/d/1ZXFIhYczos679r70Yu8vV9uO6B1J0ztzeDxbnBxD1S0/mobilepresent?slide=id.g31364026ad_3_2
