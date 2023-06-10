@@ -65,7 +65,7 @@ output_base_path
 
 
 # 4. Transformer_Model
-1. source:
+1. Source:
 - https://pytorch-forecasting.readthedocs.io/en/stable/tutorials/stallion.html
 - https://docs.google.com/presentation/d/1ZXFIhYczos679r70Yu8vV9uO6B1J0ztzeDxbnBxD1S0/mobilepresent?slide=id.g31364026ad_3_2
 
