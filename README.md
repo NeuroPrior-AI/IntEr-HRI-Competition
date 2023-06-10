@@ -16,7 +16,7 @@
 # 2. Data_Epoch_Range
 - Data_Epoch_Range is based on the Data_Processing
 - Revised the time point to increase 1 for each (still 500 Hz)
-- Label the range of Epoch from -0.1 to 0.9 as same Event (Increase the number of Event label name
+- Label the range of Epoch from -0.1 to 0.9 as same Event (Increase the number of Event label name)
 
 ```plaintext
 output_base_path
