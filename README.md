@@ -68,3 +68,8 @@ output_base_path
 1. source:
 - https://pytorch-forecasting.readthedocs.io/en/stable/tutorials/stallion.html
 - https://docs.google.com/presentation/d/1ZXFIhYczos679r70Yu8vV9uO6B1J0ztzeDxbnBxD1S0/mobilepresent?slide=id.g31364026ad_3_2
+
+2. Transformer_Model
+- Transformer_Model.ipynb contains the transformer model to sort all Data_Epoch_Range data
+- Transformer.ckpt contains the training model
+
