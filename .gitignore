@@ -1,1 +1,7 @@
-CRNN/.idea
+.idea/
+CRNN/.idea/
+CRNN/__pycache__/
+CRNN/models/__pycache__/
+CRNN/preprocess/__pycache__/
+CRNN/datasets/__pycache__/
+CRNN/tmp/

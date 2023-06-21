@@ -10,61 +10,60 @@ class CRNN(nn.Module):
         self.pool0 = nn.MaxPool1d(kernel_size=4)
 
         # Convolutional layers
-        self.conv1 = nn.Conv1d(in_channels=in_channels, out_channels=in_channels, kernel_size=7, stride=1,
+        self.conv1 = nn.Conv1d(in_channels=in_channels, out_channels=2 * in_channels, kernel_size=7, stride=1,
                                padding=3)
         torch.nn.init.xavier_uniform_(self.conv1.weight)
-        self.bn1 = nn.BatchNorm1d(num_features=in_channels)
+        self.bn1 = nn.BatchNorm1d(num_features=2 * in_channels)
         self.relu1 = nn.LeakyReLU(n_slope)
         self.pool1 = nn.MaxPool1d(kernel_size=2)
 
-        self.conv2 = nn.Conv1d(in_channels= in_channels, out_channels=in_channels, kernel_size=7, stride=1,
+        self.conv2 = nn.Conv1d(in_channels=2 * in_channels, out_channels=4 * in_channels, kernel_size=7, stride=1,
                                padding=3)
         torch.nn.init.xavier_uniform_(self.conv2.weight)
-        self.bn2 = nn.BatchNorm1d(num_features=in_channels)
+        self.bn2 = nn.BatchNorm1d(num_features=4 * in_channels)
         self.relu2 = nn.LeakyReLU(n_slope)
         self.pool2 = nn.MaxPool1d(kernel_size=2)
 
-        self.conv3 = nn.Conv1d(in_channels=in_channels + in_channels, out_channels=in_channels + in_channels,
+        self.conv3 = nn.Conv1d(in_channels=in_channels + 4 * in_channels, out_channels=6 * in_channels,
                                stride=1, kernel_size=7)
         torch.nn.init.xavier_uniform_(self.conv3.weight)
-        self.bn3 = nn.BatchNorm1d(num_features=in_channels + in_channels)
+        self.bn3 = nn.BatchNorm1d(num_features=6 * in_channels)
         self.relu3 = nn.LeakyReLU(n_slope)
         self.pool3 = nn.MaxPool1d(kernel_size=16)
 
         self.flatten = nn.Flatten()
 
         self.relui = nn.LeakyReLU(n_slope)
-        self.fci = nn.Linear(in_features=132, out_features=64)
+        self.fci = nn.Linear(in_features=4608, out_features=1024)      # TODO: this needs to be changed
         torch.nn.init.xavier_uniform_(self.fci.weight)
 
         self.reluii = nn.LeakyReLU(n_slope)
-        self.fcii = nn.Linear(in_features=64, out_features=12)
+        self.fcii = nn.Linear(in_features=1024, out_features=512)
         torch.nn.init.xavier_uniform_(self.fcii.weight)
 
-        # Recurrent layers:
+        # Recurrent layers: # TODO: omit
         if model == 'lstm':
-            self.rnn = nn.LSTM(input_size=12, hidden_size=6, num_layers=1,
+            self.rnn = nn.LSTM(input_size=512, hidden_size=6, num_layers=1,
                                bidirectional=True)
         elif model == 'gru':
-            self.rnn = nn.GRU(input_size=12, hidden_size=6, num_layers=1,
+            self.rnn = nn.GRU(input_size=512, hidden_size=6, num_layers=1,
                               bidirectional=True)
         elif model == 'rnn':
-            self.rnn = nn.RNN(input_size=12, hidden_size=6, num_layers=1,
+            self.rnn = nn.RNN(input_size=512, hidden_size=6, num_layers=1,
                               bidirectional=True)
         else:
             raise Exception("model is not one of 'lstm', 'gru', or 'rnn'.")
 
         # Fully connected layer
         self.relu4 = nn.LeakyReLU(n_slope)
-        self.fc1 = nn.Linear(in_features=12, out_features=6)
+        self.fc1 = nn.Linear(in_features=512, out_features=1024)
         torch.nn.init.xavier_uniform_(self.fc1.weight)
         self.relu5 = nn.LeakyReLU(n_slope)
-        self.fc2 = nn.Linear(in_features=6, out_features=num_classes)
+        self.fc2 = nn.Linear(in_features=1024, out_features=num_classes)
         torch.nn.init.xavier_uniform_(self.fc2.weight)
 
     def forward(self, x):
         # Convolutional layers
-
         x1 = self.conv1(x)
         x1 = self.bn1(x1)
         x1 = self.relu1(x1)
@@ -87,14 +86,14 @@ class CRNN(nn.Module):
         # Reshape for recurrent layers
         x3 = self.flatten(x3)  # swap dimensions for RNN input
 
-        x3 = self.fci(x3)
+        x3 = self.fci(x3)            # x3 shape: (batch size, 896)
         x3 = self.relui(x3)
         x3 = self.fcii(x3)
         x3 = self.reluii(x3)
 
         # Recurrent layers
-        x3, _ = self.rnn(x3[:, None, :])
-        x3 = self.relu4(x3[:, -1, :])
+        x3, _ = self.rnn(x3[:, None, :])    # x3[:, None, :] shape: (batch size, 1, 12) <=> (seq length, batch size, dim)
+        x3 = self.relu4(x3[:, -1, :])       # x3[:, -1, :] shape: (batch size, 12)
 
         # Fully connected layer
         x4 = self.fc1(x3)
