@@ -8,6 +8,13 @@
 - Have a meeting with Bo Zhao to discuss whether the dataset is good and how to use the dataset
 - Communicate with Xuzhe and Paul Tang to solve the problem together
 
+- New Task:
+1. Assemble the model together
+2. Record everyone dataset 10-fold cross validation
+3. Fourier transform
+4. sin (x), sin(2x).....
+5. Transformer model revised ( May be failed)
+
 # 1. Data_Processing
 - In EEG/Data_Processing, there are file for the all data including individual (EEG_AA56D, EEG_AC17D.....) and combined file (EEG_Final.csv).
 - The sampling frequency is 500 Hz, the time point will increase 0.002 for each.
