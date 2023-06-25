@@ -1,9 +1,9 @@
 .idea/
-CRNN/.idea/
-CRNN/__pycache__/
-CRNN/models/__pycache__/
-CRNN/preprocess/__pycache__/
-CRNN/datasets/__pycache__/
-CRNN/tmp/
-CRNN/tools/__pycache__/
-CRNN/resnet_model/models/__pycache__/
+ResNet/.idea/
+ResNet/__pycache__/
+ResNet/models/__pycache__/
+ResNet/preprocess/__pycache__/
+ResNet/datasets/__pycache__/
+ResNet/tmp/
+ResNet/tools/__pycache__/
+ResNet/resnet_model/models/__pycache__/
