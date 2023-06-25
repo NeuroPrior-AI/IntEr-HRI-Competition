@@ -5,3 +5,5 @@ CRNN/models/__pycache__/
 CRNN/preprocess/__pycache__/
 CRNN/datasets/__pycache__/
 CRNN/tmp/
+CRNN/tools/__pycache__/
+CRNN/resnet_model/models/__pycache__/

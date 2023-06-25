@@ -9,6 +9,9 @@ from torch.optim.lr_scheduler import CyclicLR
 from models.resnet import ResNet
 from datasets.dataset import EEGDataset
 from predict import predict
+from sklearn.model_selection import train_test_split
+from tools.standardize import standardize
+from tools.f1 import calculate_f1_score
 
 
 def train_model(model, optimizer, criterion, lr_scheduler, train_loader, test_loader, epochs=100, print_every=10, log_dir="new_log"):
@@ -64,12 +67,13 @@ def train_model(model, optimizer, criterion, lr_scheduler, train_loader, test_lo
                 f.write(f"Saved model at {epoch} epoch.\n")
             print(f"Saved model at {epoch} epoch.")
 
+        log_epoch = "Epoch {}, Train acc: {:.2f}%, Test acc: {:.2f}%, Train loss: {:.2f}, Test loss: {:.2f}" \
+            .format(epoch, accuracy * 100, test_acc * 100, xentropy_loss_avg, test_loss)
+        # Write log
+        with open(log_file, "a") as f:
+            f.write(log_epoch + "\n")
+
         if epoch % print_every == 0:
-            log_epoch = "Epoch {}, Train acc: {:.2f}%, Test acc: {:.2f}%, Train loss: {:.2f}, Test loss: {:.2f}"\
-                .format(epoch, accuracy * 100, test_acc * 100, xentropy_loss_avg, test_loss)
-            # Write log
-            with open(log_file, "a") as f:
-                f.write(log_epoch + "\n")
             print(log_epoch)
 
         train_accs.append(accuracy)
@@ -114,16 +118,15 @@ if __name__ == "__main__":
     y = np.load('./tmp/data/y.npy')
     X_val = np.load('./tmp/data/X_val.npy')
     y_val = np.load('./tmp/data/y_val.npy')
+    # X = np.load('./tmp/cross_validation_data/X_AA56D.npy')
+    # y = np.load('./tmp/cross_validation_data/y_AA56D.npy')
     print(f'Loaded data.')
 
+    # Split into train/val set:
+    # X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.1, random_state=42)
+
     # Standardize data
-    # Note that X has shape (num_samples, num_features, sequence_length)
-    mean = np.mean(X, axis=(0, 2), keepdims=True)  # Calculate mean across samples and sequence length
-    std = np.std(X, axis=(0, 2), keepdims=True)  # Calculate standard deviation across samples and sequence length
-    # Perform standardization (Z-score normalization)
-    X = (X - mean) / (std + 1e-7)
-    # Standardize validation data
-    X_val = (X_val - mean) / (std + 1e-7)
+    X_train, X_val = standardize(X, X_val)
     print(f'Standardized data.')
 
     # Build model
@@ -138,25 +141,20 @@ if __name__ == "__main__":
     val_dataloader = DataLoader(dataset=val_dataset)
 
     # Specify training hyperparameters:
-    learning_rate = 0.01
-    epochs = 120
-    alpha = 0.95
-    # xentropy_weight = torch.tensor([
-    #     (68 / 56) ** alpha,  # S 1 + S 32 + S 48 + S 64
-    #     (68 / 6) ** alpha,  # S 80
-    #     (68 / 6) ** alpha  # S 96
-    # ]).to(device)
+    learning_rate = 0.001       # if test loss explode, use smaller lr
+    epochs = 80
+    alpha = 1
     xentropy_weight = torch.tensor([
         (68 / 62) ** alpha,  # S 1 + S 32 + S 48 + S 64 + S 80
         (68 / 6) ** alpha  # S 96
     ]).to(device)
     criterion = nn.CrossEntropyLoss(weight=xentropy_weight)
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
-    scheduler = CyclicLR(optimizer, base_lr=0.001, max_lr=0.1, mode="triangular2", step_size_up=400,
+    scheduler = CyclicLR(optimizer, base_lr=0.0001, max_lr=0.001, mode="triangular2", step_size_up=100,
                          cycle_momentum=False)
 
     # For logging (edit before training):
-    log_model = "resnet_cycliclr"
+    log_model = "resnet_crossval"
     log_epochs = str(epochs) + "epochs"
     log_batch = str(batch_size) + "batch"
     log_name = log_model + "_" + log_batch + "_" + log_epochs
@@ -167,7 +165,7 @@ if __name__ == "__main__":
     train_accs, test_accs, train_losses, test_losses, learning_rates = train_model(model,
                                                                                    optimizer,
                                                                                    criterion,
-                                                                                   scheduler,
+                                                                                   None,
                                                                                    train_dataloader,
                                                                                    val_dataloader,
                                                                                    epochs=epochs,
@@ -216,3 +214,6 @@ if __name__ == "__main__":
     plt.savefig(log_dir + "/cm_best_model.png")
     plt.show()
     print(f'Saved confusion matrices.')
+
+    # Print f1
+    print(f"f1: {calculate_f1_score(conf_mat)}")
