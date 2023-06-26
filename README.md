@@ -22,6 +22,6 @@
 3. F1 Score
 - f1_score.txt shows the result of F1 score. 
 
-# Time Point Predict Algorithum
+# Time Point Predict algorithm
 1. Algorithum
 
