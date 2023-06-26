@@ -19,3 +19,5 @@ f1_score.txt shows the result of F1 score.
 
 10-fold cross-validation organized by each subject. avg.txt contains the average F1 score of the 10 trials and the average confusion matrix. avg_cm.png is the average confusion matrix plot.
 
+3. Time_Point_Prediction_Result
+
