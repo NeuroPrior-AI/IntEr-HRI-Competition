@@ -21,3 +21,4 @@ f1_score.txt shows the result of F1 score.
 
 3. Time_Point_Prediction_Result
 
+There are 6 Time Points about label "S 96" for each test dataset
