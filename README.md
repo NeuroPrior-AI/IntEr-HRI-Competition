@@ -7,6 +7,9 @@
 1. Ensemble Model
 - An ensemble of machine learning models comprising MLP, logistic regression, SVC, random forest, k-NN, XGBoost, LSTM, CNN, and a grid-search-optimized XGBoost are bundled in a pipeline with feature extraction and transformation steps.
 
+2. Custom ResNet Model
+- The ResNet model starts with a 1-D convolutional layer, followed by batch normalization and a ReLU activation. A custom ResidualBlock structure is defined, which consists of two convolutional layers with batch normalization and ReLU activation, as well as a skip connection path from the input to the output. The residual block is applied twice in sequence. After passing through the residual blocks, the output is passed to an adaptive average pooling layer, flattened, and finally fed to a fully connected linear layer for binary classification.
+
 # 10 Fold Validation
 1. Accuracy.txt
 - The Accuracy.txt file contains the classification accuracy for each validation cycle.
@@ -19,6 +22,6 @@
 3. F1 Score
 - f1_score.txt shows the result of F1 score. 
 
-# Time Point Predict Algorithum
+# Time Point Predict algorithm
 1. Algorithum
 
