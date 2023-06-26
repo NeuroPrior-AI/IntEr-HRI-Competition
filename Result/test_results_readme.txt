@@ -15,5 +15,7 @@ The Predicted label presents the predict output from the label, True label shows
 - F1 Score
 f1_score.txt shows the result of F1 score.
 
-2. Customer ResNet Model
+2. ResNet Model
+
+10-fold cross-validation organized by each subject. avg.txt contains the average F1 score of the 10 trials and the average confusion matrix. avg_cm.png is the average confusion matrix plot.
 
