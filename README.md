@@ -4,16 +4,12 @@
 - Need to revise the File_Path (Including training data and EEG_Final.csv) in EEG_Final.py and EEG_Epoch.py when run the scripts
 
 # Task
-- Begin to implement the time series transformer model
-- Have a meeting with Bo Zhao to discuss whether the dataset is good and how to use the dataset
-- Communicate with Xuzhe and Paul Tang to solve the problem together
 
-- New Task:
-1. Assemble the model together
-2. Record everyone dataset 10-fold cross validation
-3. Fourier transform
-4. sin (x), sin(2x).....
-5. Transformer model revised ( May be failed)
+- New Task (Problem):
+1. The architecture/pipeline for the ensemble model is not clear in detail
+2. The classification results of the ensemble model are almost the same for all subjects, how can this be explained?
+3. Try to delete the lstm and cnn model in ensemble model (Reduce the time processing for online stage)
+4. Revise the 2 page paper
 
 # 1. Data_Processing
 - In EEG/Data_Processing, there are file for the all data including individual (EEG_AA56D, EEG_AC17D.....) and combined file (EEG_Final.csv).
