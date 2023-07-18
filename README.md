@@ -5,9 +5,13 @@
 
 # Task
 
-- New Task (Problem):
+- Problem:
 1. The architecture/pipeline for the ensemble model is not clear in detail
 2. The classification results of the ensemble model are almost the same for all subjects, how can this be explained?
+
+- New Task
+1. Draw the structure for ensemble model.
+2. For the classification results, this is because ensemble model intergrates many model so that the result is pretty simular.
 3. Try to delete the lstm and cnn model in ensemble model (Reduce the time processing for online stage)
 4. Revise the 2 page paper
 
