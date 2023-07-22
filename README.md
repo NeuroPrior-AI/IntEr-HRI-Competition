@@ -1,11 +1,28 @@
 # IntEr-HRI-Competition
 
-# Data Processing
-1. Filter: 0.1 - 50 Hz bandpass filter
+# Dataset
+Create folder `Dataset` under root, and put data inside.
+
+# Data Preprocessing
+```
+cd Preprocess
+```
+and then run
+```
+python process.py
+```
 
 # Model Training
 1. Ensemble Model
-- An ensemble of machine learning models comprising MLP, logistic regression, SVC, random forest, k-NN, XGBoost, LSTM, CNN, and a grid-search-optimized XGBoost are bundled in a pipeline with feature extraction and transformation steps.
+- An ensemble of machine learning models comprising MLP, logistic regression, SVC, random forest, k-NN, XGBoost, and a grid-search-optimized XGBoost are bundled in a pipeline with feature extraction and transformation steps.
+
+```
+cd Models/ensemble_model
+```
+and then run
+```
+python ensemble.py
+```
 
 2. Custom ResNet Model
 - The ResNet model starts with a 1-D convolutional layer, followed by batch normalization and a ReLU activation. A custom ResidualBlock structure is defined, which consists of two convolutional layers with batch normalization and ReLU activation, as well as a skip connection path from the input to the output. The residual block is applied twice in sequence. After passing through the residual blocks, the output is passed to an adaptive average pooling layer, flattened, and finally fed to a fully connected linear layer for binary classification.
@@ -24,3 +41,7 @@
 
 # Time Point Predict algorithm
 
+run
+```
+python probmap.py
+```
