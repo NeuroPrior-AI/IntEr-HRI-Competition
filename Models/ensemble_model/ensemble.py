@@ -109,7 +109,6 @@ preds_rg = clf.predict(X_test)
 acc2 = np.mean(preds_rg == Y_test.argmax(axis=-1))
 print("Classification accuracy: %f " % (acc2))
 
-# names = ['no error', 'S 80']
 names = ['non-P300', 'P300']
 plt.figure(0)
 plot_confusion_matrix(preds_rg, Y_test.argmax(axis=-1), names, title='Ensemble Method')
