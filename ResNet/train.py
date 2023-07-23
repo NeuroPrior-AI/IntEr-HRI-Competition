@@ -126,11 +126,11 @@ if __name__ == "__main__":
     # X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.1, random_state=42)
 
     # Standardize data
-    X_train, X_val = standardize(X, X_val)
+    X, X_val = standardize(X, X_val)
     print(f'Standardized data.')
 
     # Build model
-    model = ResNet(num_classes=2)
+    model = ResNet(num_classes=3)
     model.to(device)
 
     # Initialize dataloaders
@@ -143,18 +143,19 @@ if __name__ == "__main__":
     # Specify training hyperparameters:
     learning_rate = 0.001       # if test loss explode, use smaller lr
     epochs = 80
-    alpha = 1
+    alpha = 0.85
     xentropy_weight = torch.tensor([
-        (68 / 62) ** alpha,  # S 1 + S 32 + S 48 + S 64 + S 80
+        (68 / 56) ** alpha,  # S 1 + S 32 + S 48 + S 64
+        (68 / 6) ** alpha,  # S 80
         (68 / 6) ** alpha  # S 96
     ]).to(device)
     criterion = nn.CrossEntropyLoss(weight=xentropy_weight)
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
-    scheduler = CyclicLR(optimizer, base_lr=0.0001, max_lr=0.001, mode="triangular2", step_size_up=100,
+    scheduler = CyclicLR(optimizer, base_lr=0.001, max_lr=0.01, mode="triangular2", step_size_up=200,
                          cycle_momentum=False)
 
     # For logging (edit before training):
-    log_model = "resnet_crossval"
+    log_model = "resnet_simplified_3class"
     log_epochs = str(epochs) + "epochs"
     log_batch = str(batch_size) + "batch"
     log_name = log_model + "_" + log_batch + "_" + log_epochs
@@ -165,7 +166,7 @@ if __name__ == "__main__":
     train_accs, test_accs, train_losses, test_losses, learning_rates = train_model(model,
                                                                                    optimizer,
                                                                                    criterion,
-                                                                                   None,
+                                                                                   scheduler,
                                                                                    train_dataloader,
                                                                                    val_dataloader,
                                                                                    epochs=epochs,

@@ -36,17 +36,17 @@ class ResidualBlock(nn.Module):
 class ResNet(nn.Module):
     def __init__(self, num_classes=6):
         super(ResNet, self).__init__()
-        self.conv = nn.Conv1d(64, 64, kernel_size=7, stride=2, padding=3)
-        self.bn = nn.BatchNorm1d(64)
+        self.conv = nn.Conv1d(64, 8, kernel_size=7, stride=2, padding=3)
+        self.bn = nn.BatchNorm1d(8)
         self.relu = nn.ReLU(inplace=True)
-        self.layer1 = self.make_residual_block(64, 32, stride=1)
+        self.layer1 = self.make_residual_block(8, 4, stride=1)
         self.avg_pool = nn.AdaptiveAvgPool1d(1)
-        self.fc = nn.Linear(32, num_classes)
+        self.fc = nn.Linear(4, num_classes)
 
     def make_residual_block(self, in_channels, out_channels, stride):
         return nn.Sequential(
             ResidualBlock(in_channels, out_channels, stride),
-            ResidualBlock(out_channels, out_channels, stride=1)
+            # ResidualBlock(out_channels, out_channels, stride=1)
         )
 
     def forward(self, x):

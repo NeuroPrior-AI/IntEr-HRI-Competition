@@ -48,6 +48,15 @@ event_code_to_index3 = {        # 2 classes
     "S 96": 1
 }
 
+event_code_to_index4 = {        # 2 classes
+    "S 1": 0,
+    "S 32": 0,
+    "S 48": 0,
+    "S 64": 0,
+    "S 80": 1,
+    "S 96": 1
+}
+
 
 def load_csv(csv, code_to_index_map):
     """
@@ -120,7 +129,7 @@ if __name__ == "__main__":
     # csv = "C:/Users/PaulS/Desktop/IntErHRI_data/csv_epoch/AA56D/20230427_AA56D_orthosisErrorIjcai_multi_set1.vhdr_combined.csv"
     # load_csv(csv, event_code_to_index2)
 
-    X, y, X_val, y_val = save_data("C:/Users/PaulS/Desktop/IntErHRI_data/csv_epoch", event_code_to_index3, val_list)
+    X, y, X_val, y_val = save_data("C:/Users/PaulS/Desktop/IntErHRI_data/csv_epoch", event_code_to_index2, val_list)
     np.save('../tmp/data/X.npy', X)
     np.save('../tmp/data/y.npy', y)
     np.save('../tmp/data/X_val.npy', X_val)
