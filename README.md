@@ -43,5 +43,5 @@ python ensemble.py
 
 run
 ```
-python probmap.py
+python Algorithms/probmap.py
 ```
