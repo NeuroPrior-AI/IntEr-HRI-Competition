@@ -14,6 +14,7 @@
 2. For the classification results, this is because ensemble model intergrates many model so that the result is pretty simular.
 3. Try to delete the lstm and cnn model in ensemble model (Reduce the time processing for online stage)
 4. Revise the 2 page paper
+5. Python 3.8.10
 
 # 1. Data_Processing
 - In EEG/Data_Processing, there are file for the all data including individual (EEG_AA56D, EEG_AC17D.....) and combined file (EEG_Final.csv).
