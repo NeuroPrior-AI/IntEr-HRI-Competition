@@ -51,3 +51,5 @@ if __name__ == "__main__":
     parser.add_argument('--filter_type', type=str, default='bandpass',
                         help='filter type, choose from [bandpass, butter, cheby, ellip]')
     main(parser.parse_args())
+
+    print("Done!")
