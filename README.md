@@ -43,5 +43,11 @@ python ensemble.py
 
 run
 ```
-python probmap.py
+python Algorithms/probmap.py
+```
+
+# Testing
+1. Offline test
+```
+python Testing/offline_test.py 
 ```

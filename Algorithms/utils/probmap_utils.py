@@ -78,7 +78,7 @@ def generate_prob_map(raw_fname, duration, precision, model_name, cla, tmin, tma
             clf = load(pretrined_model_path + 'Ensemble_96.joblib')
             pred_prob_i = clf.predict_proba(X.reshape(X.shape[0], X.shape[1], X.shape[2]))[:, cla]
         elif model_name == "resnet":
-            X = split_eeg(raw_fname, duration, i / precision, tmin, tmax, filter_type=None)
+            X = split_eeg(raw_fname, duration, i / precision, tmin, tmax, filter_type='bandpass')
             pred_prob_i = resnet_predict(X)[:, cla]
             print("pred_prob_i: ", pred_prob_i)
         else:
