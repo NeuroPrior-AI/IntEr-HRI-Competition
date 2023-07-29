@@ -48,3 +48,6 @@ class Filter:
     def _wavelet_transform(self, data, wavelet='db4'):
         (cA, cD) = pywt.dwt(data, wavelet)
         return cA, cD
+
+    def _xDAWN_filter():
+        return 0

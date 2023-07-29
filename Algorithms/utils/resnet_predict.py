@@ -38,11 +38,11 @@ def resnet_predict(X):
     '''
     # Load model:
     model = ResNet(num_classes=2)
-    checkpoint = torch.load('../Models/pre-trained/resnet/best_model.pt')
+    checkpoint = torch.load('Models/pre-trained/resnet/best_model.pt')
     model.load_state_dict(checkpoint)
     # Load standardization parameters:
-    mean = np.load('../Models/pre-trained/resnet/mean.npy')
-    std = np.load('../Models/pre-trained/resnet/std.npy')
+    mean = np.load('Models/pre-trained/resnet/mean.npy')
+    std = np.load('Models/pre-trained/resnet/std.npy')
     # Wrap model to scikit-learn (with predict function)
     pytorch_classifier = PyTorchClassifier(model, mean, std)
 
