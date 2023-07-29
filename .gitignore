@@ -11,4 +11,4 @@ Dataset/*
 Preprocess/X.pkl
 Preprocess/y.pkl
 .vscode/
-Preprocess/subjects/*/*.pkl
+Preprocess/subjects/*
