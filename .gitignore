@@ -7,7 +7,8 @@ ResNet/datasets/__pycache__/
 ResNet/tmp/
 ResNet/tools/__pycache__/
 ResNet/resnet_model/models/__pycache__/
-Dataset/
+Dataset/*
 Preprocess/X.pkl
 Preprocess/y.pkl
 .vscode/
+Preprocess/subjects/*/*.pkl

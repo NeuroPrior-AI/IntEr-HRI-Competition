@@ -62,9 +62,9 @@ def generate_top6(raw_fname, duration, precision, model_name, cla=1, tmin=-0.1, 
         time = np.arange(0, len(prob_map_96)/precision * duration, duration/precision)
         # Plot the probability maps
         plt.figure(figsize=(20, 5))
-        plt.plot(time, prob_map_96, label='96', color='b')
+        plt.plot(time, prob_map_96, label='96', color='black')
         # plt.plot(time, prob_map_80, label='80', color = 'r')
-        plt.plot(time, prob_map_96, label='sum', color='black')
+        # plt.plot(time, prob_map_96, label='sum', color='black')
         # Set x-ticks every 1 unit
         plt.xticks(np.arange(min(time), max(time)+1, 5))
         plt.xlabel('Time (sec)')

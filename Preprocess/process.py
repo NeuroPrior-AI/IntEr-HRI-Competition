@@ -1,5 +1,6 @@
 # Import necessary libraries
 import argparse
+import os
 import numpy as np
 import glob
 import pickle
@@ -35,6 +36,33 @@ def main(args):
     with open('y.pkl', 'wb') as f:
         pickle.dump(y, f)
 
+    if args.individual:
+        subjects = ['AA56D', 'AC17D', 'AJ05D', 'AQ59D',
+                    'AW59D', 'AY63D', 'BS34D', 'BY74D']
+        for subject in subjects:
+            subject_path = "../Dataset/training data/" + subject
+            subject_files = glob.glob(
+                f"{subject_path}/**/*{args.file_type}", recursive=True)
+
+            subject_data = [process_file(filename, args.tmin, args.tmax, mapping, event_id={
+                'non-P300': 1, 'P300': 2}, filter_type=args.filter_type) for filename in subject_files]
+
+            X = np.concatenate([data for data, labels in subject_data], axis=0)
+            y = np.concatenate(
+                [labels for data, labels in subject_data], axis=0)
+            print("The shape of X is: " + str(X.shape) +
+                  "and the shape of y is: " + str(y.shape))
+            # Check if the directory exists
+            if not os.path.exists('subjects/' + subject):
+                # If not, create it
+                os.makedirs('subjects/' + subject)
+
+            # Save all data
+            with open('subjects/' + subject + '/X.pkl', 'wb') as f:
+                pickle.dump(X, f)
+            with open('subjects/' + subject + '/y.pkl', 'wb') as f:
+                pickle.dump(y, f)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='preprocess data')
@@ -48,6 +76,7 @@ if __name__ == "__main__":
                         help='end time of epochs')
     parser.add_argument('--baseline', type=tuple, default=(-0.3, 0.0),
                         help='baseline period')
+    parser.add_argument('--individual', type=bool, default=False)
     parser.add_argument('--filter_type', type=str, default='bandpass',
                         help='filter type, choose from [bandpass, butter, cheby, ellip]')
     main(parser.parse_args())
