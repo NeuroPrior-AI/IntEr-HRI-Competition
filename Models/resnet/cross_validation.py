@@ -12,7 +12,6 @@ import matplotlib.pyplot as plt
 from utils import predict, calculate_f1_score, standardize
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
-
 if __name__ == "__main__":
     root_directory = "C:/Users/PaulS/Desktop/IntErHRI_data/csv_epoch"
     participants = os.listdir(root_directory)
@@ -35,8 +34,8 @@ if __name__ == "__main__":
         # Create the log directory if it doesn't exist
         os.makedirs(p_dir, exist_ok=True)
 
-        conf_mats = []      # stores all confusion matrices across 10 trials
-        f1s = []            # stores all f1s across 10 trials
+        conf_mats = []  # stores all confusion matrices across 10 trials
+        f1s = []  # stores all f1s across 10 trials
 
         # Load data
         X = np.load(f'./tmp/cross_validation_data/X_{p}.npy')
@@ -48,7 +47,7 @@ if __name__ == "__main__":
         for i, (train_idx, val_idx) in enumerate(kfold.split(X)):
             print(f'Started {i} trial of k-fold cross valdiation.')
 
-            trial_dir = p_dir + f"/trial{i}"       # directory will be created in train_model()
+            trial_dir = p_dir + f"/trial{i}"  # directory will be created in train_model()
 
             # Split into train and test sets
             X_train, X_val = X[train_idx], X[val_idx]
@@ -64,7 +63,8 @@ if __name__ == "__main__":
             # Initialize dataloaders
             batch_size = 136
             train_dataset = EEGDataset(X_train, y_train, device)
-            train_dataloader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)  # each set has 68 trials
+            train_dataloader = DataLoader(dataset=train_dataset, batch_size=batch_size,
+                                          shuffle=True)  # each set has 68 trials
             val_dataset = EEGDataset(X_val, y_val, device)
             val_dataloader = DataLoader(dataset=val_dataset)
 
@@ -83,40 +83,24 @@ if __name__ == "__main__":
 
             # Run the training loop:
             print(f'Start training.')
-            train_accs, test_accs, train_losses, test_losses, learning_rates = train_model(model,
-                                                                                           optimizer,
-                                                                                           criterion,
-                                                                                           None,
-                                                                                           train_dataloader,
-                                                                                           val_dataloader,
-                                                                                           epochs=epochs,
-                                                                                           print_every=8,
-                                                                                           log_dir=trial_dir)
-
-            # Save and plot graphs:
-            plt.plot(train_losses)
-            plt.plot(test_losses)
-            plt.title("loss")
-            plt.savefig(trial_dir + "/loss.png")
-
-            plt.plot(train_accs)
-            plt.plot(test_accs)
-            plt.title("accuracy")
-            plt.savefig(trial_dir + "/accuracy.png")
-
-            plt.plot(learning_rates)
-            plt.plot(learning_rates)
-            plt.title("learning_rates")
-            plt.savefig(trial_dir + "/learning_rates.png")
-            print(f'Saved training plots.')
+            _, _, _, _, _ = train_model(model=model,
+                                        optimizer=optimizer,
+                                        criterion=criterion,
+                                        lr_scheduler=None,
+                                        train_loader=train_dataloader,
+                                        val_loader=val_dataloader,
+                                        epochs=epochs,
+                                        print_every=8,
+                                        log_dir=log_dir)
 
             # Save and plot confusion matrix:
             model = torch.load(trial_dir + "/best_model.pt")
             model.to(device)
             labels, preds = predict(model, val_dataloader)
             conf_mat = confusion_matrix(labels, preds, normalize="true")
-            if conf_mat.shape == (1, 1):        # edge case if validation set only contains 1 class
-                conf_mat = np.eye(2)        # in this case, we can be sure the model can learn a single class classifier perfectly
+            if conf_mat.shape == (1, 1):  # edge case if validation set only contains 1 class
+                conf_mat = np.eye(
+                    2)  # in this case, we can be sure the model can learn a single class classifier perfectly
             disp = ConfusionMatrixDisplay(confusion_matrix=conf_mat)
             disp.plot()
             plt.savefig(trial_dir + "/cm_best_model.png")
@@ -150,4 +134,3 @@ if __name__ == "__main__":
         print(f"Average f1 score: {avg_f1}.")
         print(f"Average conf mat: {avg_conf_mat}.")
         print("==================")
-

@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 from torch.optim.lr_scheduler import CyclicLR
 from resnet import ResNet
 from eegnet import EEGNet
+from crnn import CRNN
 from dataset import EEGDataset
 from sklearn.model_selection import train_test_split
 from utils import calculate_f1_score, plot_confusion_matrix, predict, standardize
@@ -124,8 +125,8 @@ if __name__ == "__main__":
     print(f'X shape: {X.shape}, y shape: {y.shape}')    # X should have shape (num_samples, 64, 501), y (num_samples,)
 
     # Split into 70% training, 10% validation, 20% testing:
-    X_train, X_temp, Y_train, Y_temp = train_test_split(X, y, test_size=0.3)
-    X_val, X_test, Y_val, Y_test = train_test_split(X_temp, Y_temp, test_size=0.66667)
+    X_train, X_temp, Y_train, Y_temp = train_test_split(X, y, test_size=0.3, random_state=42)
+    X_val, X_test, Y_val, Y_test = train_test_split(X_temp, Y_temp, test_size=0.66667, random_state=42)
     print(f'Loaded data.')
     class_0_percentage = np.sum(Y_train == 0) / len(Y_train)
     class_1_percentage = 1 - class_0_percentage
@@ -136,7 +137,7 @@ if __name__ == "__main__":
     print(f'Standardized data.')
 
     # Build model
-    model = ResNet(num_classes=2)
+    model = CRNN(num_classes=2)
     model.to(device)
 
     # Initialize dataloaders
@@ -162,7 +163,7 @@ if __name__ == "__main__":
                          cycle_momentum=False)
 
     # For logging (edit before training):
-    log_name = f'resnet_0.9alpha_{epochs}_epochs'
+    log_name = f'crnn_0.9alpha_hidden_size=16_bidirectional_{epochs}_epochs'
     log_dir = "../../resnet_training_logs/" + log_name
     # Create the log directory if it doesn't exist
     os.makedirs(log_dir, exist_ok=True)
@@ -225,7 +226,7 @@ if __name__ == "__main__":
 
     # For best model:
     # Save and plot confusion matrix:
-    model = ResNet(num_classes=2)
+    model = CRNN(num_classes=2)
     checkpoint = torch.load(log_dir + "/best_model.pt")
     model.load_state_dict(checkpoint)
     model.to(device)
