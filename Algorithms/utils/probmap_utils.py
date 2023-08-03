@@ -31,7 +31,7 @@ def split_eeg(raw_fname, duration, offset, tmin, tmax, filter_type='cheby'):
 
     # Extract time intervals
     events = mne.events_from_annotations(raw)[0]
-    interval = events[events[:, 2] == 2][:, 0] / raw.info['sfreq']
+    interval = events[events[:, 2] == 1][:, 0] / raw.info['sfreq']
 
     # Split the data into time intervals
     start = interval[0] + offset
@@ -116,5 +116,5 @@ def get_64_32_timepts(raw_fname):
 def get_start_time(raw_fname):
     raw = mne.io.read_raw_brainvision(raw_fname, preload=True, verbose=False)
     events = mne.events_from_annotations(raw)[0]
-    start = events[events[:, 2] == 2][:, 0][0]
+    start = events[events[:, 2] == 1][:, 0][0]
     return start

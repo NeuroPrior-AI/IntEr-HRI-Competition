@@ -40,19 +40,48 @@ def extract_pattern(filepath):
 def main(args):
     vhdr_files = glob.glob(f"{args.path}/**/*{args.file_type}", recursive=True)
 
-    score = 0
-    for raw_fname in vhdr_files:
-        key = extract_pattern(raw_fname)
-        top6 = generate_top6(raw_fname, duration=1, precision=10,
-                             model_name=args.model, cla=1, tmin=-0.1, tmax=0.9, doPlot=False)
-        diff = [x - y for x, y in zip(top6, ground_truths[key])]
-        print("diff: ", diff)
-        for i in diff:
-            if i < 0 or i > 1000:
-                score += 1000
-            else:
-                score += i
-    print("Final score: ", score)
+    # Open a text file for writing
+    with open('Testing/output.txt', 'w') as file:
+        score = 0
+        for raw_fname in vhdr_files:
+            temp_score = 0
+            true_pos = 0
+            key = extract_pattern(raw_fname)
+            top6 = generate_top6(raw_fname, duration=1, precision=10,
+                                 model_name=args.model, cla=1, tmin=-0.1, tmax=0.9, doPlot=False)
+            
+            # Write the key, top6, and ground_truths[key] to the file
+            file.write(f"Set: {key}\n")
+            file.write(f"Predicted: {top6}\n")
+            file.write(f"Ground Truth: {ground_truths[key]}\n")
+            
+            diff = [x - y for x, y in zip(top6, ground_truths[key])]
+            print("diff: ", diff)
+            for i in diff:
+                if i < 0 or i > 1000:
+                    temp_score += 1000
+                else:
+                    temp_score += i
+                    true_pos += 1
+            file.write(f"Set Score: {temp_score}\n")
+            file.write(f"No. of True Positives: {true_pos}\n")
+            file.write(f"-----------------------------------\n")
+            score += temp_score
+        print("Final score: ", score)
+
+    # score = 0
+    # for raw_fname in vhdr_files:
+    #     key = extract_pattern(raw_fname)
+    #     top6 = generate_top6(raw_fname, duration=1, precision=10,
+    #                          model_name=args.model, cla=1, tmin=-0.1, tmax=0.9, doPlot=False)
+    #     diff = [x - y for x, y in zip(top6, ground_truths[key])]
+    #     print("diff: ", diff)
+    #     for i in diff:
+    #         if i < 0 or i > 1000:
+    #             score += 1000
+    #         else:
+    #             score += i
+    # print("Final score: ", score)
 
 
 if __name__ == "__main__":

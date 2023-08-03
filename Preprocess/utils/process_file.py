@@ -35,19 +35,27 @@ def process_file(raw_fname, tmin, tmax, mapping, event_id, filter_type):
 
 
 # Function to process files in seconds
-def process_file_sec(raw_fname):
+def process_file_sec(raw_fname, filter_type, length):
     # Ignore warnings and set log level
     warnings.filterwarnings("ignore")
     mne.set_log_level('WARNING')
 
-    # Read the raw data, apply filtering and select the EEG channels
+    # Read the raw data and select the EEG channels
     raw = mne.io.read_raw_brainvision(raw_fname, preload=True, verbose=False)
-    raw.filter(l_freq=0.1, h_freq=30, method="iir")
     picks = mne.pick_types(raw.info, meg=False,
                            eeg=True, stim=False, eog=False)
+    
+    # Apply filtering to the data
+    filter = Filter(raw=raw)
+    raw = filter.filter_data(filter_type=filter_type)
+
 
     # Prepare for extraction of one-second epochs
-    length_of_data_in_sec = raw.times[-1]
+    # print("Length of data in seconds: ", raw.times[-1])
+    if length == None:
+        length_of_data_in_sec = raw.times[-1]
+    else:
+        length_of_data_in_sec = length
 
     X = []
     y = []
@@ -61,12 +69,12 @@ def process_file_sec(raw_fname):
         label = 1
         if len(events) > 0 and events[0][2] == 96:
             label = 2
-        elif len(events) > 0 and events[0][2] == 80:
-            label = 3
+        # elif len(events) > 0 and events[0][2] == 80:
+        #     label = 3
         y.append(label)
 
-    X = np.array(X)
-    y = np.array(y)
+    # X = np.array(X)
+    # y = np.array(y)
 
     return X, y
 
