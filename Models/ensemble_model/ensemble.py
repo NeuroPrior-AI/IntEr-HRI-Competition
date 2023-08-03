@@ -31,6 +31,7 @@ from tensorflow.keras.wrappers.scikit_learn import KerasClassifier
 from tensorflow.keras.layers import Conv1D, Flatten, Dense
 from sklearn.model_selection import GridSearchCV
 from tensorflow.keras.layers import LSTM
+from sklearn.ensemble import StackingClassifier
 
 n_class = 2
 
@@ -63,7 +64,7 @@ def create_cnn():
     return model
 
 
-all_data_path = '../../Preprocess/subjects/AA56D'
+all_data_path = '../../Preprocess/subjects/BS34D'
 with open(all_data_path + '/X.pkl', 'rb') as f:
     X = pickle.load(f)
 with open(all_data_path + '/y.pkl', 'rb') as f:
@@ -83,9 +84,9 @@ X_val, X_test, Y_val, Y_test = train_test_split(
 # Y_train = y
 
 chans, samples = 64, 501
-n_components = 5
+n_components = 10
 # Grid search for hyperparameter tuning
-clf_xgb = GridSearchCV(XGBClassifier(), param_grid={'n_estimators': [100, 150, 200]})
+# clf_xgb = GridSearchCV(XGBClassifier(), param_grid={'n_estimators': [100, 150, 200]})
 
 clfs = [
     ('mlp', make_pipeline(XdawnCovariances(n_components), TangentSpace(
@@ -98,10 +99,10 @@ clfs = [
         metric='riemann'), RandomForestClassifier(n_estimators=150))),
     ('xgb', make_pipeline(XdawnCovariances(n_components), TangentSpace(
         metric='riemann'), XGBClassifier(n_estimators=150, learning_rate=0.1))),
-    ('knn', make_pipeline(XdawnCovariances(n_components), TangentSpace(
-        metric='riemann'), KNeighborsClassifier(n_neighbors=5))),
-    ('xgb_gs', make_pipeline(XdawnCovariances(
-    n_components), TangentSpace(metric='riemann'), clf_xgb))
+    # ('knn', make_pipeline(XdawnCovariances(n_components), TangentSpace(
+    #     metric='riemann'), KNeighborsClassifier(n_neighbors=5))),
+    # ('xgb_gs', make_pipeline(XdawnCovariances(
+    # n_components), TangentSpace(metric='riemann'), clf_xgb))
 ]
 
 # cnn = KerasClassifierWithProba(build_fn=create_cnn, epochs=10, batch_size=10, verbose=0)
@@ -110,6 +111,7 @@ clfs = [
 # clfs.append(('cnn', cnn))
 
 clf = VotingClassifier(estimators=clfs, voting='soft')
+# clf = StackingClassifier(estimators=clfs, final_estimator=LogisticRegression(), stack_method='auto')
 
 X_train_flattened = X_train.reshape(X_train.shape[0], -1)
 
@@ -118,20 +120,19 @@ X_res, y_res = sm.fit_resample(X_train_flattened, Y_train.argmax(axis=-1))
 
 X_res = X_res.reshape(X_res.shape[0], chans, samples)
 
-clf.fit(X_res, y_res)
-dump(clf, '../pre-trained/Ensemble.joblib')
+clf.fit(X_train, Y_train.argmax(axis=-1))
+# dump(clf, '../pre-trained/Ensemble.joblib')
 X_test_flattened = X_test.reshape(X_test.shape[0], -1)
 preds_rg = clf.predict(X_test)
 
 acc2 = np.mean(preds_rg == Y_test.argmax(axis=-1))
 print("Classification accuracy: %f " % (acc2))
 
-names = ['non-P300', 'P300']
+names = ['no error', 'S 96']
 plt.figure(0)
-plot_confusion_matrix(preds_rg, Y_test.argmax(
-    axis=-1), names, title='Ensemble Method')
+plot_confusion_matrix(preds_rg, Y_test.argmax(axis=-1), names, title='Ensemble Method')
 plt.savefig('../figures/ensemble-cv.png')
 
-cv_results = cross_validate(clf, X, y.argmax(axis=-1), cv=10)
-print("10-fold cross validation accuracy: ", np.mean(cv_results['test_score']))
-print("10-fold cross validation standard deviation: ", np.std(cv_results['test_score']))
+# cv_results = cross_validate(clf, X, y.argmax(axis=-1), cv=10)
+# print("10-fold cross validation accuracy: ", np.mean(cv_results['test_score']))
+# print("10-fold cross validation standard deviation: ", np.std(cv_results['test_score']))
