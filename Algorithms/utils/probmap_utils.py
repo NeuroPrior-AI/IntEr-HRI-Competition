@@ -68,6 +68,7 @@ def generate_prob_map(raw_fname, duration, precision, model_name, cla, tmin, tma
         if model_name == "ensemble":
             X = split_eeg(raw_fname, duration, i / precision, tmin, tmax)
             clf = load(pretrined_model_path + 'Ensemble.joblib')
+            print("X.shape: ", X.shape)
             pred_prob_i = clf.predict_proba(X.reshape(X.shape[0], X.shape[1], X.shape[2]))[:, cla]
         elif model_name == "ensemble_80":
             X = split_eeg(raw_fname, duration, i / precision, tmin, tmax)
