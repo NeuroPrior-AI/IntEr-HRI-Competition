@@ -7,7 +7,7 @@ from Algorithms.utils.resnet_predict import resnet_predict
 
 from Preprocess.utils.filter import Filter
 
-def split_eeg(raw_fname, duration, offset, tmin, tmax, filter_type='cheby'):
+def split_eeg(raw_fname, duration, offset, tmin, tmax, filter_type=None):
     """
     Splits EEG data into several time intervals.
 
@@ -80,6 +80,7 @@ def generate_prob_map(raw_fname, duration, precision, model_name, cla, tmin, tma
             pred_prob_i = clf.predict_proba(X.reshape(X.shape[0], X.shape[1], X.shape[2]))[:, cla]
         elif model_name == "resnet":
             X = split_eeg(raw_fname, duration, i / precision, tmin, tmax, filter_type='bandpass')
+            print("X.shape: ", X.shape)
             pred_prob_i = resnet_predict(X)[:, cla]
             print("pred_prob_i: ", pred_prob_i)
         else:
