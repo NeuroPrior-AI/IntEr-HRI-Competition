@@ -64,7 +64,8 @@ def create_cnn():
     return model
 
 
-all_data_path = '../../Preprocess/subjects/BS34D'
+#all_data_path = '../../Preprocess/subjects/BS34D'
+all_data_path = '/home/naturaldx/IntEr-HRI-Competition/Preprocess/subjects/AQ59D'
 with open(all_data_path + '/X.pkl', 'rb') as f:
     X = pickle.load(f)
 with open(all_data_path + '/y.pkl', 'rb') as f:
@@ -121,7 +122,8 @@ X_res, y_res = sm.fit_resample(X_train_flattened, Y_train.argmax(axis=-1))
 X_res = X_res.reshape(X_res.shape[0], chans, samples)
 
 clf.fit(X_train, Y_train.argmax(axis=-1))
-# dump(clf, '../pre-trained/Ensemble.joblib')
+#dump(clf, '../pre-trained/Ensemble.joblib_AQ59D')
+dump(clf, '/home/naturaldx/IntEr-HRI-Competition/Models/pre-trained/Ensemble_AQ59D.joblib')
 X_test_flattened = X_test.reshape(X_test.shape[0], -1)
 preds_rg = clf.predict(X_test)
 
@@ -131,7 +133,8 @@ print("Classification accuracy: %f " % (acc2))
 names = ['no error', 'S 96']
 plt.figure(0)
 plot_confusion_matrix(preds_rg, Y_test.argmax(axis=-1), names, title='Ensemble Method')
-plt.savefig('../figures/ensemble-cv.png')
+#plt.savefig('../figures/ensemble-cv.png')
+plt.savefig('/home/naturaldx/IntEr-HRI-Competition/Models/figures/ensemble-cv_AQ59D.png')
 
 # cv_results = cross_validate(clf, X, y.argmax(axis=-1), cv=10)
 # print("10-fold cross validation accuracy: ", np.mean(cv_results['test_score']))
